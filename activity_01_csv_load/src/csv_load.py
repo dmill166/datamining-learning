@@ -30,10 +30,7 @@ if __name__ == "__main__":
         print('DB connection successful!')
 
         # TODO: check if csv file exists
-        file_name = os.path.join(DATA_FOLDER, CSV_FILE_NAME)
-        if not :
-            print('Couldn\'t find ' + file_name)
-            sys.exit(1)
+        
 
         # TODO: process csv file
         cursor = db.cursor()
