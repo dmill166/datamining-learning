@@ -8,7 +8,7 @@ To illustrate how to use an API to collect weather-related data.
 
 ## Instructions 
 
-In this assignment you are asked to register a free account on (https://openweathermap.org/)[https://openweathermap.org/]. Then study the API's documentation to extract weather info from locations described in data/locations.csv. Your program should save the collected info in JSON format, similar to: 
+In this assignment you are asked to register a free account on [https://openweathermap.org/](https://openweathermap.org/). Then study the API's documentation to extract weather info from locations described in data/locations.csv. Your program should save the collected info in JSON format, similar to: 
 
 ```
 [
