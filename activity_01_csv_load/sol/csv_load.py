@@ -20,34 +20,37 @@ if __name__ == "__main__":
     db_passwd = os.getenv('DB_PASSWD')
 
     try:
-        # TODOd: connect to db
+        # TODO: connect to db
         db = mysql.connector.connect(
-            host= DB_HOST,
-            database= DB_NAME,
+            host=DB_HOST,
+            database=DB_NAME,
             user=db_user,
-            password=db_passwd
+            password=db_passwd,
+            autocommit=True
         )
         print('DB connection successful!')
 
-        # TODOd: check if csv file exists
+        # TODO: check if csv file exists
         file_name = os.path.join(DATA_FOLDER, CSV_FILE_NAME)
-        if not file_name:
+        if not (os.path.isfile(file_name)):
             print('Couldn\'t find ' + file_name)
             sys.exit(1)
 
-        # TODOd: process csv file
+        # TODO: process csv file
         cursor = db.cursor()
         sql = 'INSERT INTO Employees VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
         count = 0
         with open(os.path.join(DATA_FOLDER, CSV_FILE_NAME), 'rt') as csv_file:
             reader = csv.reader(csv_file)
             for row in reader:
-                cursor.execute(sql, row)
-                db.commit()
-                count += 1
+                try:
+                    cursor.execute(sql, row)
+                    count += 1
+                except:
+                    print('Error: insert failed!')
             print(count, 'record(s) inserted.')
 
-        # TODOd: close db connection
+        # TODO: close db connection
         db.close()
 
         print('Done!')
