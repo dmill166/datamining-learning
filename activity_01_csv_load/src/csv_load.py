@@ -17,9 +17,12 @@
 #
 #   Utilized the dictionary format for using a cursor to insert records:
 #   https://dev.mysql.com/doc/connector-python/en/connector-python-example-cursor-transaction.html
+#
+#   Researched to resolve mysql.connector issue (two versions installed, 
+#       needed only mysql-connector-python, NOT mysql-connector):
+#   https://stackoverflow.com/questions/50557234/authentication-plugin-caching-sha2-password-is-not-supported
 
 import mysql.connector 
-import csv
 import os
 import sys
 from mysql.connector import errorcode
@@ -27,7 +30,7 @@ from mysql.connector import errorcode
 
 # definitions/parameters
 original_path = os.getcwd()
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(os.path.dirname((__file__)))
 os.chdir('../')
 DATA_FOLDER = os.path.join(os.getcwd(), 'data')
 CSV_FILE_NAME = 'employees.csv'
@@ -51,10 +54,10 @@ if __name__ == "__main__":
         print('DB connection successful!')
 
         # TODO: check if csv file exists
-        if not os.path.exists(os.path.join(DATA_FOLDER, CSV_FILE_NAME)):
+        if not os.path.isfile(os.path.join(DATA_FOLDER, CSV_FILE_NAME)):
             print("Sorry, that doesn't exist!")
             sys.exit(1)
-        print("Success! Found the path!")
+        print("Success! Found the file!")
         
 
         # TODO: process csv file
