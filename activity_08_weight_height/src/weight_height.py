@@ -16,5 +16,5 @@ if __name__ == "__main__":
     # TODO: extract height and weight from csv file, separating female and male data
 
         
-    # TODO: compute and display stats summary info for female and male: heigh (mean and std), weight (mean and std), and correlation coefficient between height and weight
+    # TODO: compute and display stats summary info for female and male: heigh (range, mean and std), weight (range, mean and std), and correlation coefficient between height and weight
  
