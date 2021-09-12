@@ -130,3 +130,4 @@ dmypy.json
 .pyre/
 .DS_Store
 hwk_01_xlsx_load/data/.DS_Store
+hwk_02_weather_api/src/creds.rtf

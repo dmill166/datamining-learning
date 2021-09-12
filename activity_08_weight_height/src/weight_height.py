@@ -14,10 +14,11 @@ os.chdir(os.path.dirname((__file__)))
 os.chdir('../')
 DATA_FOLDER = os.path.join(os.getcwd(), 'data')
 CSV_FILE_NAME = 'weight_height.csv'
+CSV_FILE_PATH = os.path.join(DATA_FOLDER, CSV_FILE_NAME)
 
 if __name__ == "__main__":
 
-    if not os.path.isfile(os.path.join(DATA_FOLDER, CSV_FILE_NAME)):
+    if not os.path.isfile(CSV_FILE_PATH):
         print("Sorry, that doesn't exist!")
         sys.exit(1)
     print("Success! Found the file!")
@@ -53,7 +54,7 @@ if __name__ == "__main__":
         print('mean:', round(np.average(np_arrays[b]), 2))
         print('std:', round(np.std(np_arrays[b]), 2), '\n')
         if b % 2 == 1:
-            print('Corr coeff:', np.corrcoef(np_arrays[b-1], np_arrays[b]), '\n')
+            print('Corr coeff:', round(np.corrcoef(np_arrays[b-1], np_arrays[b])[0,1], 4), '\n')
     
     # f_height_data = np.array(f_height_list)
     # print('\n\nFemale height:')

@@ -34,6 +34,7 @@ os.chdir(os.path.dirname((__file__)))
 os.chdir('../')
 DATA_FOLDER = os.path.join(os.getcwd(), 'data')
 CSV_FILE_NAME = 'employees.csv'
+CSV_FILE_PATH = os.path.join(DATA_FOLDER, CSV_FILE_NAME)
 DB_HOST = 'localhost'
 DB_NAME = 'hr'
 

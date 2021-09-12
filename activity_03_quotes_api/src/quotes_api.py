@@ -7,8 +7,12 @@ import json
 import os
 
 # definitions/parameters
-DATA_FOLDER = '../data'
+original_path = os.getcwd()
+os.chdir(os.path.dirname((__file__)))
+os.chdir('../')
+DATA_FOLDER = os.path.join(os.getcwd(), 'data')
 JSON_FILE_NAME = 'quotes.json'
+JSON_FILE_PATH = os.path.join(DATA_FOLDER, JSON_FILE_NAME)
 QUOTES_API_URL = 'http://quotes.rest/qod'
 
 if __name__ == "__main__":
