@@ -42,6 +42,7 @@ if __name__ == "__main__":
     print('Weight range: [{:.2f}..{:.2f}]'.format(np.min(weight_females), np.max(height_females)))
     print('Weight mean: {:.2f}'.format(np.mean(weight_females)))
     print('Weight std: {:.2f}'.format(np.std(weight_females)))
+    print('Height x Weight corrcoef: {:.2f}'.format(np.corrcoef(height_females, weight_females)[0,1]))
 
     print()
 
@@ -51,4 +52,6 @@ if __name__ == "__main__":
     print('Height std: {:.2f}'.format(np.std(height_males)))
     print('Weight range: [{:.2f}..{:.2f}]'.format(np.min(weight_males), np.max(height_males)))
     print('Weight mean: {:.2f}'.format(np.mean(weight_males)))  
-    print('Weight std: {:.2f}'.format(np.std(weight_males)))        
+    print('Weight std: {:.2f}'.format(np.std(weight_males)))  
+    print('Height x Weight corrcoef: {:.2f}'.format(np.corrcoef(height_males, weight_males)[0,1]))
+      
