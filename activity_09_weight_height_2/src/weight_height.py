@@ -6,6 +6,7 @@ import os
 import sys
 import csv
 import matplotlib.pyplot as plt 
+import numpy as np
 
 # definitions/parameters
 original_path = os.getcwd()
@@ -41,16 +42,24 @@ if __name__ == "__main__":
     # TODO: produce a histograms of female weights with 10 bins starting at 53 and with 15 width
     counts, bins, _ = plt.hist(
     f_weight_list, 
-    bins=10, 
-    range=(53, max(f_weight_list)), 
-    rwidth=.15
+    rwidth=.5,
+    range=(55, 195),
+    bins=[67.5, 82.5, 97.5, 112.5, 127.5, 142.5, 157.5, 172.5, 187.5]
     )
+    plt.xlim([60, 200])
+    plt.xticks(np.arange(60, 190, 15))
+    plt.ylim([0, 1650])
+    plt.yticks(np.arange(0, 1800, 200))
+    plt.xlabel('Weight (pounds)')
+    plt.ylabel('Female Count')
+    plt.title('Female Weights')
     plt.show()
 
     # TODO: produce a scatter plot of male heights vs. weights 
     plt.scatter(m_height_list, m_weight_list)
     plt.grid()
-    plt.xlabel('Male heights (in.)')
-    plt.ylabel('Male weights (lbs.)')
+    plt.xlabel('Height (inches)')
+    plt.ylabel('Weights (pounds)')
+    plt.title('Male Height x Weight')
     plt.show()
 
