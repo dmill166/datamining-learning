@@ -1,32 +1,27 @@
 # CS390Z - Introduction to Data Minining - Fall 2021
 # Instructor: Thyago Mota
-# Description: Activity 11: similarity analysis of neighborhoods in the Denver metro area
+# Description: Homework 04 - show outliers
 
 import csv 
-import re 
 import os
-import math
 import matplotlib.pyplot as plt 
-from matplotlib import cm as cm
+import re
 
 # definitions/parameters
 DATA_FOLDER = '../data'
 CSV_FILE_NAME = 'denver_neighborhoods.csv'
 
+# Google drive mount
+# drive.mount('/content/drive')
+
 def min_max(data, mins, maxs, interval=(0,1)):
     return [ int(((data[i] - mins[i]) / (maxs[i] - mins[i]) * (interval[1] - interval[0]) + interval[0]) * 100000) / 100000 for i in range(len(data))]
 
-def eucl_dist(a, b): 
-    sum = 0
-    for i in range(len(a)):
-        sum += (a[i] - b[i])**2
-    return int((1 - math.sqrt(sum / len(a))) * 100000) / 100000
-
-# TODO: finish the similarity analysis
+# TODO: finish the scraper
 if __name__ == "__main__":
 
-    neighborhoods = []
     matrix = []
+    neighborhoods = []
     with open(os.path.join(DATA_FOLDER, CSV_FILE_NAME), 'rt') as csv_file:
         reader = csv.reader(csv_file)
         row_count = 0
@@ -46,35 +41,24 @@ if __name__ == "__main__":
                     mins[i] = min(mins[i], data[i])
                     maxs[i] = max(maxs[i], data[i])
             matrix.append(data)
+            
     # print(mins)
     # print(maxs)
     matrix = [ min_max(data, mins, maxs) for data in matrix ]
-    # print(matrix)
-    
+    #print(matrix)
 
-    print(matrix[0])
-    print(matrix[1])
-    print(eucl_dist(matrix[0], matrix[0]))
-    print(eucl_dist(matrix[1], matrix[0]))
-    print(eucl_dist(matrix[2], matrix[0]))
-    
-    dm = []
-    for i in range(len(matrix)):
-        row = []
-        for j in range(len(matrix)):
-            row.append(eucl_dist(matrix[i], matrix[j]))
-        dm.append(row)
-    plt.rc('font', size=6) 
-    cmap = cm.get_cmap('YlOrBr')
-    img = plt.matshow(dm, cmap=cmap)
+    columns = [[], [], [], [], []]
+    for data in matrix:
+      for i in range(5):
+        columns[i].append(data[i])
+    bp = plt.boxplot(columns)
     axes = plt.gca()
-    axes.set_yticks(list(range(len(neighborhoods))))
-    axes.set_yticklabels(neighborhoods)
-    axes.set_xticks(list(range(len(neighborhoods))))
-    axes.set_xticklabels(neighborhoods, rotation=90)
-    fig = plt.gcf() # reference to the plot
-    ticks = [x / 10 for x in range(1, 11)]
-    fig.colorbar(img, ticks=ticks)
-    # fig.subplots_adjust(top=0.2)
-    plt.show()
+    axes.set_xticklabels(['pop', 'home$', 'schools', 'crime', 'x factor'])
+    plt.title('Neighborhoods in the Denver Metro Area')
+    plt.ylabel('Normalized Values')
 
+    # TODO: evaluate outliers in population 
+    # for whisker in bp['whiskers']:
+    #     print(whisker.get_xydata())
+    
+    plt.show()
