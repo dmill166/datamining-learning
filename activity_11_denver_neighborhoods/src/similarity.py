@@ -10,8 +10,12 @@ import matplotlib.pyplot as plt
 from matplotlib import cm as cm
 
 # definitions/parameters
-DATA_FOLDER = '../data'
+original_path = os.getcwd()
+os.chdir(os.path.abspath(''))
+os.chdir('../')
+DATA_FOLDER = os.path.join(os.getcwd(), 'data')
 CSV_FILE_NAME = 'denver_neighborhoods.csv'
+CSV_FILE_PATH = os.path.join(DATA_FOLDER, CSV_FILE_NAME)
 
 def min_max(data, mins, maxs, interval=(0,1)):
     return [ int(((data[i] - mins[i]) / (maxs[i] - mins[i]) * (interval[1] - interval[0]) + interval[0]) * 100000) / 100000 for i in range(len(data))]
@@ -25,4 +29,4 @@ def eucl_dist(a, b):
 # TODO: finish the similarity analysis
 if __name__ == "__main__":
 
-    
+    print()

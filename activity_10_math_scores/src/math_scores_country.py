@@ -6,6 +6,7 @@ import os
 import csv
 import matplotlib.pyplot as plt 
 import numpy as np
+import sys
 
 # definitions/parameters
 original_path = os.getcwd()
