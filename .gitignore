@@ -131,3 +131,11 @@ dmypy.json
 .DS_Store
 hwk_01_xlsx_load/data/.DS_Store
 hwk_02_weather_api/src/creds.rtf
+/.idea/21FCS390Z.iml
+/.idea/csv-plugin.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/vcs.xml
+/.idea/*
+*/.idea/*
