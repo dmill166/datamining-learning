@@ -13,9 +13,9 @@ original_path = os.getcwd()
 os.chdir(os.path.dirname(__file__))
 os.chdir('../')
 DATA_FOLDER = os.path.join(os.getcwd(), 'data')
-JSON_FILE_NAME = 'covid_testing_denver.json'
-JSON_FILE_PATH = os.path.join(DATA_FOLDER, JSON_FILE_NAME)
-BASE_URL = 'https://covidcheckcolorado.org/find-our-sites-testing/'
+CSV_FILE_NAME = 'covid_testing_denver.json'
+CSV_FILE_PATH = os.path.join(DATA_FOLDER, JSON_FILE_NAME)
+BASE_URL = 'https://ucr.fbi.gov/crime-in-the-u.s/2019/crime-in-the-u.s.-2019/topic-pages/tables/table-20'
 HEADERS = {"User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 12871.102.0) AppleWebKit/537.36 (KHTML, like Gecko) "
                          "Chrome/81.0.4044.141 Safari/537.36"}
 

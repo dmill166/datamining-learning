@@ -1,65 +1,85 @@
 # imports
-import json
-import numpy as np
 import csv
 import os
+import sys
+import numpy as np
+import requests
+import wordninja
+from bs4 import BeautifulSoup
+
 import matplotlib.pyplot as plt
-import re
+import numpy as np
+from matplotlib import colors
+from matplotlib.ticker import PercentFormatter
 
 # Definitions/Parameters
+from matplotlib import pyplot as plt, colors
+from matplotlib.pyplot import legend
+
 original_path = os.getcwd()
 os.chdir(os.path.dirname(__file__))
 os.chdir('../')
 DATA_FOLDER = os.path.join(os.getcwd(), 'data')
-CRIME_FILE_NAME = 'crime_data.csv'
-CRIME_FILE_PATH = os.path.join(DATA_FOLDER, CRIME_FILE_NAME)
 CENSUS_FILE_NAME = 'census_data.csv'
 CENSUS_FILE_PATH = os.path.join(DATA_FOLDER, CENSUS_FILE_NAME)
 BASE_YEAR = 2019
+BASE_URL = 'https://ucr.fbi.gov/crime-in-the-u.s/2019/crime-in-the-u.s.-2019/topic-pages/tables/table-20'
+HEADERS = {"User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 12871.102.0) AppleWebKit/537.36 (KHTML, like Gecko) "
+                         "Chrome/81.0.4044.141 Safari/537.36"}
 
 # Resources:
-# Referenced to determine identification of digits in Python strings:
 #   https://www.pythonpool.com/python-check-if-string-is-integer/
-# Referenced regarding encoding issue encountered on MacOS while reading CSV:
 #   http://python-notes.curiousefficiency.org/en/latest/python3/text_file_processing.html#what-changed-in-python-3
-# Referenced regarding removing commas from string version of numbers in Python:
 #   https://www.kite.com/python/answers/how-to-remove-a-comma-from-a-string-in-python
-# Referenced how to print numbers with commas
+#   https://www.pluralsight.com/guides/extracting-data-html-beautifulsoup
+#   https://www.crummy.com/software/BeautifulSoup/bs4/doc/#attributes
+#   https://stackoverflow.com/questions/8870261/how-to-split-text-without-spaces-into-list-of-words
+#   https://www.geeksforgeeks.org/python-string-join-method/
+#   https://stackoverflow.com/questions/5193811/how-can-i-check-for-a-new-line-in-string-in-python-3-x
 
 # Read in Crime Data
 if __name__ == "__main__":
-    crime_col_headers = []
+    # Make a GET request to fetch the raw HTML content
+    html_content = requests.get(BASE_URL).text
+
+    # Parse the html content
+    soup = BeautifulSoup(html_content, "html.parser")
+    table_data = soup.find('table').text.strip()
+    table_header_text, table_body_text = table_data.split('\n\n\n\n\n\n\n')
+
+    crime_col_headers = list(table_header_text.replace('\n\n\n', '\n\n').split('\n\n'))
+    for compound_headers_index in range(len(crime_col_headers)):
+        word_sep = ' '
+        crime_col_headers[compound_headers_index] = word_sep.join(
+            wordninja.split(crime_col_headers[compound_headers_index]))
+    for header_index in range(len(crime_col_headers)):
+        if crime_col_headers[header_index][-1].isdigit():
+            crime_col_headers[header_index] = crime_col_headers[header_index][0:-1].title()
+        else:
+            crime_col_headers[header_index] = crime_col_headers[header_index].title()
+
+    all_crime_rows = list(table_body_text.replace('\n\n\n', '\n\n').split('\n\n'))
+
     crime_row_headers = []
-    total_crimes = []
+    new_state_row = []
     crime_data = []
     crime_state_total = []
-    with open(CRIME_FILE_PATH, 'rt', encoding='utf-8') as csv_file:
-        reader = csv.reader(csv_file)
-        row_count = 0
-        for row in reader:
-            state_total = 0
-            index = 0
-            row_data = []
-            row_count += 1
-            if row_count == 1:
-                for item in row:
-                    if item[-1].isdigit():
-                        crime_col_headers.append(item[0:-1])
-                    else:
-                        crime_col_headers.append(item)
+    for element in all_crime_rows:
+        if element.strip().replace(' ', '').isalnum() and not element.replace(',', '').isdigit():
+            if element[-1].isdigit():
+                new_state_row = [element[0:-1].strip()]
             else:
-                for item in row:
-                    if index == 0:
-                        if item[-1].isdigit():
-                            crime_row_headers.append(item[0:-1])
-                        else:
-                            crime_row_headers.append(item)
-                        index += 1
-                    else:
-                        row_data.append(int(item.replace(',', '')))
-                        state_total += int(item.replace(',', ''))
-                crime_data.append(row_data[0:])
-                crime_state_total.append(state_total)
+                new_state_row = [element.strip()]
+        elif element.replace(',', '').isdigit():
+            new_state_row.append(int(element.replace(',', '')))
+        else:
+            print("I don't know that data type! Abort mission!")
+            sys.exit(0)
+
+        if len(new_state_row) == 10:
+            crime_row_headers.append(new_state_row[0])
+            crime_state_total.append(new_state_row[1])
+            crime_data.append(new_state_row[2:])
 
     # Read in Census Data
     census_data = []
@@ -67,7 +87,7 @@ if __name__ == "__main__":
     census_regions = []
     census_subcategories = []
     census_states = []
-    census_data_2019 = []
+    census_data_BASE_YEAR = []
     with open(CENSUS_FILE_PATH, 'rt', encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file)
         row_count = 0
@@ -89,14 +109,14 @@ if __name__ == "__main__":
                     index += 1
                 if census_regions[-1] == 'State':
                     census_states.append(census_subcategories[-1])
-                    census_data_2019.append(census_state_data[-1])
+                    census_data_BASE_YEAR.append(census_state_data[-1])
                 census_data.append(census_state_data)
     for data in census_data:
         continue
     print()
 
     crimes_total_array = np.array(crime_state_total)
-    print('*** Summary Statistics of 2019 Crimes Data ***')
+    print('*** Summary Statistics of ' + str(BASE_YEAR) + ' Crimes Data ***')
     crime_records = '{:,.0f}'.format(len(crime_state_total))
     print(f'#records: {crime_records}')
     crimes_minimum = '{:,.0f}'.format(np.min(crimes_total_array))
@@ -109,20 +129,47 @@ if __name__ == "__main__":
     crimes_std = '{:,.2f}'.format(np.std(crimes_total_array))
     print(f'Count of Crimes StD: {crimes_std}')
 
-    census_totals_2019_array = np.array(census_data_2019)
-    print('\n*** Summary Statistics of 2019 Census Data ***')
+    census_totals_BASE_YEAR_array = np.array(census_data_BASE_YEAR)
+    print('\n*** Summary Statistics of ' + str(BASE_YEAR) + ' Census Data ***')
     census_records = '{:,.0f}'.format(len(census_states))
     print(f'#records: {census_records}')
-    census_minimum = '{:,.0f}'.format(np.min(census_totals_2019_array))
-    census_maximum = '{:,.0f}'.format(np.max(census_totals_2019_array))
-    print(f'2019 Census Range: [{census_minimum} , {census_maximum}]')
-    census_mean = '{:,.2f}'.format(np.mean(census_totals_2019_array))
-    print(f'2019 Census Mean: {census_mean}')
-    census_median = '{:,.0f}'.format(np.median(census_totals_2019_array))
-    print(f'2019 Census Median: {census_median}')
-    census_std = '{:,.2f}'.format(np.std(census_totals_2019_array))
-    print(f'2019 Census StD: {census_std}\n\n')
+    census_minimum = '{:,.0f}'.format(np.min(census_totals_BASE_YEAR_array))
+    census_maximum = '{:,.0f}'.format(np.max(census_totals_BASE_YEAR_array))
+    print(f'{str(BASE_YEAR)} Census Range: [{census_minimum} , {census_maximum}]')
+    census_mean = '{:,.2f}'.format(np.mean(census_totals_BASE_YEAR_array))
+    print(f'{str(BASE_YEAR)} Census Mean: {census_mean}')
+    census_median = '{:,.0f}'.format(np.median(census_totals_BASE_YEAR_array))
+    print(f'{str(BASE_YEAR)} Census Median: {census_median}')
+    census_std = '{:,.2f}'.format(np.std(census_totals_BASE_YEAR_array))
+    print(f'{str(BASE_YEAR)} Census StD: {census_std}\n\n')
 
+    BIN_SIZE = 200
+    min_x_val_histogram = min(crime_state_total) // BIN_SIZE
+    max_x_value_histogram = ((max(crime_state_total) // BIN_SIZE) + 2) * BIN_SIZE
+    bin_list = list(range(min_x_val_histogram, max_x_value_histogram, BIN_SIZE))
+    bin_label_list = []
+    for x in range(len(bin_list)):
+        #bin_label_list.append(str(bin_list[x] / 1000) + 'K-' + str(bin_list[x + 1] / 1000) + 'K')
+        bin_label_list.append(str(bin_list[x] / 1000) + 'K')
+
+
+    fig, ax = plt.subplots()
+    counts, bins, _ = plt.hist(
+        crime_state_total,
+        range=(min_x_val_histogram, max_x_value_histogram),
+        bins=bin_list,
+        rwidth=0.8
+
+    )
+    #plt.xticks(np.arange(min_x_val_histogram, max_x_value_histogram, BIN_SIZE))
+    ax.set_xticklabels(bin_label_list, rotation='horizontal')
+
+    plt.xlabel('Total Murders')
+    plt.ylabel('Number of States')
+    plt.title('Murders by state as reported by the FBI (' + str(BASE_YEAR) + ')')
+
+    plt.show()
+    print()
     """
     #%% md
     

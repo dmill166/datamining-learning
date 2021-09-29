@@ -66,16 +66,16 @@ if __name__ == "__main__":
             country_name = temp_dict.get('Country')
             hdi_one_year_float = float(temp_dict.get(TARGET_YEAR))
             hdi_data_one_year[country_name] = [hdi_one_year_float]
-    
+
     # TODO: Create histogram for country name and target year
     plot_values = []
     for x in hdi_data_one_year.values():
         plot_values.append(x[0])
     counts, bins, _ = plt.hist(
-    plot_values,
-    range=(.25, 1.05),
-    bins=[.3, .4, .5, .6, .7, .8, .9, 1.0],
-    rwidth=0.9
+        plot_values,
+        range=(.25, 1.05),
+        bins=[.3, .4, .5, .6, .7, .8, .9, 1.0],
+        rwidth=0.9
     )
     plt.xlim([.25, 1.05])
     plt.xticks(np.arange(.35, 1.05, .1))
