@@ -3,6 +3,7 @@ import csv
 import os
 import sys
 import numpy as np
+import pandas as pd
 import requests
 import wordninja
 from bs4 import BeautifulSoup
@@ -15,6 +16,8 @@ from matplotlib.ticker import PercentFormatter
 # Definitions/Parameters
 from matplotlib import pyplot as plt, colors
 from matplotlib.pyplot import legend
+import statistics as stats
+
 
 original_path = os.getcwd()
 os.chdir(os.path.dirname(__file__))
@@ -36,6 +39,13 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 12871.102.0) AppleWebKit
 #   https://stackoverflow.com/questions/8870261/how-to-split-text-without-spaces-into-list-of-words
 #   https://www.geeksforgeeks.org/python-string-join-method/
 #   https://stackoverflow.com/questions/5193811/how-can-i-check-for-a-new-line-in-string-in-python-3-x
+#   https://msudenver.instructure.com/courses/47959/pages/cs-390z-matplotlib
+#   https://stackoverflow.com/questions/6473679/transpose-list-of-lists
+#   https://stackabuse.com/rotate-axis-labels-in-matplotlib/
+#   https://www.educative.io/edpresso/how-to-emulate-a-do-while-loop-in-python
+#   https://stackoverflow.com/questions/26785354/normalizing-a-list-of-numbers-in-python
+#   https://www.geeksforgeeks.org/creating-pandas-dataframe-using-list-of-lists/
+
 
 # Read in Crime Data
 if __name__ == "__main__":
@@ -64,6 +74,7 @@ if __name__ == "__main__":
     new_state_row = []
     crime_data = []
     crime_state_total = []
+    crime_state_firearm_total = []
     for element in all_crime_rows:
         if element.strip().replace(' ', '').isalnum() and not element.replace(',', '').isdigit():
             if element[-1].isdigit():
@@ -79,7 +90,8 @@ if __name__ == "__main__":
         if len(new_state_row) == 10:
             crime_row_headers.append(new_state_row[0])
             crime_state_total.append(new_state_row[1])
-            crime_data.append(new_state_row[2:])
+            crime_state_firearm_total.append(new_state_row[2])
+            crime_data.append(new_state_row[3:])
 
     # Read in Census Data
     census_data = []
@@ -148,10 +160,9 @@ if __name__ == "__main__":
     max_x_value_histogram = ((max(crime_state_total) // BIN_SIZE) + 2) * BIN_SIZE
     bin_list = list(range(min_x_val_histogram, max_x_value_histogram, BIN_SIZE))
     bin_label_list = []
-    for x in range(len(bin_list)):
-        #bin_label_list.append(str(bin_list[x] / 1000) + 'K-' + str(bin_list[x + 1] / 1000) + 'K')
+    for x in range(len(bin_list) - 1):
+        # bin_label_list.append(str(bin_list[x] / 1000) + 'K-' + str(bin_list[x + 1] / 1000) + 'K')
         bin_label_list.append(str(bin_list[x] / 1000) + 'K')
-
 
     fig, ax = plt.subplots()
     counts, bins, _ = plt.hist(
@@ -161,8 +172,8 @@ if __name__ == "__main__":
         rwidth=0.8
 
     )
-    #plt.xticks(np.arange(min_x_val_histogram, max_x_value_histogram, BIN_SIZE))
-    ax.set_xticklabels(bin_label_list, rotation='horizontal')
+    plt.xticks(np.arange(min_x_val_histogram, max_x_value_histogram, BIN_SIZE))
+    # ax.set_xticklabels(bin_label_list, rotation='horizontal')
 
     plt.xlabel('Total Murders')
     plt.ylabel('Number of States')
@@ -170,159 +181,65 @@ if __name__ == "__main__":
 
     plt.show()
     print()
-    """
-    #%% md
-    
-    # Visualizations
-    
-    #%%
-    
-    # CS390Z - Introduction to Data Minining - Fall 2021
-    # Instructor: Thyago Mota
-    # Description: histogram
-    
-    from google.colab import drive
-    import matplotlib.pyplot as plt
-    
-    # definitions/parameters
-    DATA_FOLDER = '/content/drive/MyDrive/Colab Datasets/co_air_quality/'
-    DATASET_NAME = 'co_air_quality.json'
-    BASE_YEAR = 2020
-    
-    # Google drive mount
-    # drive.mount('/content/drive')
-    
-    with open(DATA_FOLDER + DATASET_NAME, 'rt') as json_file:
-        records = json.load(json_file)
-    
-    aqis = []
-    for record in records:
-        aqis.append(record['aqi'])
-    
-    bins = list(range(30, 185, 15))
-    counts, bins, _ = plt.hist(
-        aqis,
-        bins=bins,
-        rwidth=0.5
+
+    crime_data_transpose = list(map(list, zip(*crime_data)))
+    for weapon_rows in crime_data_transpose:
+        weapon_rows_length = len(weapon_rows)
+        outliers = weapon_rows_length // 10
+        for iterations in range(outliers):
+            weapon_rows.remove(min(weapon_rows))
+            weapon_rows.remove(max(weapon_rows))
+
+    BOX_PLOTS_TO_SHOW = 3
+    while len(crime_data_transpose) != BOX_PLOTS_TO_SHOW:
+        for decrease_iter in range(10, 1, -1):
+            threshold = max(max(crime_data_transpose)) // decrease_iter
+            for sanity_check in crime_data_transpose:
+                if max(sanity_check) < threshold:
+                    crime_data_transpose.remove(sanity_check)
+            if len(crime_data_transpose) == BOX_PLOTS_TO_SHOW:
+                break
+
+    branches = crime_data_transpose
+    medians = [stats.median(branch) for branch in branches]
+    plt.boxplot(
+        branches
     )
-    xticks = [x + 7 for x in bins]
-    axes = plt.gca()  # get a reference to the plot's axes
-    axes.set_xticks(xticks)
-    plt.xlabel('AQI')
-    plt.ylabel('Count')
-    plt.title('Air Quality in the Denver Metro Area (2020)')
-    plt.show()
-    
-    #%%
-    
-    # CS390Z - Introduction to Data Minining - Fall 2021
-    # Instructor: Thyago Mota
-    # Description: box plot
-    
-    from google.colab import drive
-    import matplotlib.pyplot as plt
-    
-    # definitions/parameters
-    DATA_FOLDER = '/content/drive/MyDrive/Colab Datasets/co_air_quality/'
-    DATASET_NAME = 'co_air_quality.json'
-    BASE_YEAR = 2020
-    
-    # Google drive mount
-    # drive.mount('/content/drive')
-    
-    
-    #%%
-    
-    #%%
-    
-    #%%
-    
-    #%%
-    
-    #%%
-    
-    #%%
-    with open(DATA_FOLDER + DATASET_NAME, 'rt') as json_file:
-        records = json.load(json_file)
-    
-    aqis = []
-    for record in records:
-        aqis.append(record['aqi'])
-    
-    bp = plt.boxplot(
-        aqis,
-        vert=False
-    )
-    for median in bp['medians']:
-        xy = median.get_xydata()[0]
-        xy[1] -= .05
-        plt.annotate(str(xy[0]), xy=xy)
-    
-    for cap in bp['caps']:
-        xy = cap.get_xydata()[0]
-        xy[1] -= .05
-        plt.annotate(str(xy[0]), xy=xy)
-    
-    min_whisker = bp['caps'][0].get_xydata()[0][0]
-    max_whisker = bp['caps'][1].get_xydata()[0][0]
-    
-    outliers = []
-    for record in records:
-        if record['aqi'] < min_whisker or record['aqi'] > max_whisker:
-            outliers.append(record)
-    print('*** Outliers ***')
-    for outlier in outliers:
-        print(outlier)
-    
+    branch_labels = []
+    i = 0
+    for branch in branches:
+        max_value = max(branch)
+        plt.annotate(str(max_value), xy=(i + 1, max_value))
+        plt.annotate(str(medians[i]), xy=(i + 1, medians[i]))
+        branch_labels.append(crime_col_headers[i + 3])
+        i += 1
     axes = plt.gca()
     axes.spines['right'].set_visible(False)
     axes.spines['top'].set_visible(False)
-    axes.set_yticklabels([''])
-    plt.ylabel('AQI Denver Metro Area (2020)')
-    
+    axes.set_xticklabels(branch_labels)
+    plt.xlabel('Murder Weapons')
+    plt.ylabel('Total Murders')
+    plt.title('Top 3 Murder Weapons by State as Reported by the FBI (' + str(BASE_YEAR) + ')')
     plt.show()
-    
-    #%%
-    
-    # CS390Z - Introduction to Data Minining - Fall 2021
-    # Instructor: Thyago Mota
-    # Description: time series
-    
-    from google.colab import drive
-    import matplotlib.pyplot as plt
-    from datetime import datetime, timedelta
-    
-    # definitions/parameters
-    DATA_FOLDER = '/content/drive/MyDrive/Colab Datasets/co_air_quality/'
-    DATASET_NAME = 'co_air_quality.json'
-    BASE_YEAR = 2020
-    
-    # Google drive mount
-    # drive.mount('/content/drive')
-    
-    with open(DATA_FOLDER + DATASET_NAME, 'rt') as json_file:
-        records = json.load(json_file)
-    
-    aqis = [0] * 12
-    counts = [0] * 12
-    for record in records:
-        date = datetime.strptime(record['date'], '%m/%d/%Y')
-        month = date.month
-        aqis[month - 1] += record['aqi']
-        counts[month - 1] += 1
-    
-    aqis = [aqis[i] / counts[i] for i in range(12)]
-    # print(aqis)
-    plt.plot(list(range(1, 13)), aqis)
-    axes = plt.gca()
-    axes.set_xticks(list(range(1, 13)))
-    plt.xlabel('Month')
-    plt.ylabel('Avg. AQI')
-    plt.title('AQI Denver Metro Area (2020)')
-    plt.grid()
-    plt.plot([1, 12], [100, 100], '+r-')
-    plt.annotate('Unhealthy (for sensitive groups)', xy=[1, 101])
-    plt.plot([1, 12], [50, 50], '+y-')
-    plt.annotate('Moderate', xy=[1, 51])
+    print()
+
+    census_totals_norm = [float(i) / sum(census_data_BASE_YEAR) for i in census_data_BASE_YEAR]
+    crime_totals_norm = [float(i) / sum(crime_state_total) for i in crime_state_total]
+    total_crime_and_census = [[], []]
+    for each_index in range(len(crime_row_headers)):
+        total_crime_and_census[0].append(str(census_totals_norm[each_index]))
+        total_crime_and_census[1].append(crime_totals_norm[each_index])
+
+
+    POINTS_TO_REMOVE = 5
+    total_crime_and_census = total_crime_and_census[0][5:]
+    total_crime_and_census = total_crime_and_census[0][:-5]
+
+
+    plt.scatter(total_crime_and_census[0], total_crime_and_census[1])
+    plt.xlabel('Normalized State Populations')
+    plt.ylabel('Normalized State Murders')
+    plt.title('State Population & Murder Data (Per FBI & Census - ' + str(BASE_YEAR) + ')')
     plt.show()
-    """
+    print()
+

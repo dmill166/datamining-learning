@@ -48,7 +48,7 @@ if __name__ == "__main__":
     new_state_row = []
     crime_data = []
     crime_state_total = []
-    crime_state_total_int = 0
+    crime_state_firearm_total = []
     for element in all_crime_rows:
         if element.strip().replace(' ', '').isalnum() and not element.replace(',', '').isdigit():
             if element[-1].isdigit():
@@ -57,16 +57,15 @@ if __name__ == "__main__":
                 new_state_row = [element.strip()]
         elif element.replace(',', '').isdigit():
             new_state_row.append(int(element.replace(',', '')))
-            crime_state_total_int += int(element.replace(',', ''))
         else:
             print("I don't know that data type! Abort mission!")
             sys.exit(0)
 
         if len(new_state_row) == 10:
             crime_row_headers.append(new_state_row[0])
-            crime_data.append(new_state_row[1:])
-            crime_state_total.append(crime_state_total_int)
-            crime_state_total_int = 0
+            crime_state_total.append(new_state_row[1])
+            crime_state_firearm_total.append(new_state_row[2])
+            crime_data.append(new_state_row[3:])
 
     # Illustrate scrape was successful
     print(crime_col_headers)
