@@ -1,24 +1,22 @@
 # imports
+import math
+
+from bs4 import BeautifulSoup
 import csv
-import os
-import sys
+from matplotlib import colors
+from matplotlib import pyplot as plt, colors
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import legend
+from matplotlib.ticker import PercentFormatter
 import numpy as np
+import os
 import pandas as pd
 import requests
+import statistics as stats
+import sys
 import wordninja
-from bs4 import BeautifulSoup
-
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib import colors
-from matplotlib.ticker import PercentFormatter
 
 # Definitions/Parameters
-from matplotlib import pyplot as plt, colors
-from matplotlib.pyplot import legend
-import statistics as stats
-
-
 original_path = os.getcwd()
 os.chdir(os.path.dirname(__file__))
 os.chdir('../')
@@ -50,7 +48,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 12871.102.0) AppleWebKit
 # Read in Crime Data
 if __name__ == "__main__":
     # Make a GET request to fetch the raw HTML content
-    html_content = requests.get(BASE_URL).text
+    html_content = requests.get(BASE_URL, verify=False).text
 
     # Parse the html content
     soup = BeautifulSoup(html_content, "html.parser")
@@ -227,19 +225,40 @@ if __name__ == "__main__":
     crime_totals_norm = [float(i) / sum(crime_state_total) for i in crime_state_total]
     total_crime_and_census = [[], []]
     for each_index in range(len(crime_row_headers)):
-        total_crime_and_census[0].append(str(census_totals_norm[each_index]))
+        total_crime_and_census[0].append(census_totals_norm[each_index])
         total_crime_and_census[1].append(crime_totals_norm[each_index])
 
+    SCATTER_NUM_OF_X_TICKS = 6
+    scatter_x_ticks = [x for x in range(0, int(max(total_crime_and_census[0]) * 100),
+                                        int(max(total_crime_and_census[0]) * 100) / 6)]
+    for y in len(scatter_x_ticks):
+        scatter_x_ticks[y] = scatter_x_ticks[y] / 100
 
-    POINTS_TO_REMOVE = 5
-    total_crime_and_census = total_crime_and_census[0][5:]
-    total_crime_and_census = total_crime_and_census[0][:-5]
+    PERCENT_DATA_POINTS_SCRUBBED = 3
+    num_scrub_points = math.ceil(len(crime_row_headers) * (PERCENT_DATA_POINTS_SCRUBBED / 100))
 
+    for k in range(num_scrub_points):
+        max_crime_data_point_index = crime_totals_norm.index(max(crime_totals_norm))
+        crime_totals_norm.pop(max_crime_data_point_index)
+        census_totals_norm.pop(max_crime_data_point_index)
 
+        max_census_data_point_index = census_totals_norm.index(max(census_totals_norm))
+        crime_totals_norm.pop(max_census_data_point_index)
+        census_totals_norm.pop(max_census_data_point_index)
+
+        min_crime_data_point_index = crime_totals_norm.index(min(crime_totals_norm))
+        crime_totals_norm.pop(min_crime_data_point_index)
+        census_totals_norm.pop(min_crime_data_point_index)
+
+        min_census_data_point_index = census_totals_norm.index(min(census_totals_norm))
+        crime_totals_norm.pop(min_census_data_point_index)
+        census_totals_norm.pop(min_census_data_point_index)
+
+    axes = plt.gca()
     plt.scatter(total_crime_and_census[0], total_crime_and_census[1])
+    axes.set_xticklabels(scatter_x_ticks)
     plt.xlabel('Normalized State Populations')
     plt.ylabel('Normalized State Murders')
     plt.title('State Population & Murder Data (Per FBI & Census - ' + str(BASE_YEAR) + ')')
     plt.show()
     print()
-
