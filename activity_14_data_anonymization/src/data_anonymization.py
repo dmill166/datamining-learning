@@ -7,17 +7,23 @@ import pandas as pd
 import random
 import requests
 import time
-from google.colab import drive
+# from google.colab import drive
 from datetime import datetime, timedelta
 
 # definitions/parameters
-DATA_FOLDER     = '/content/drive/MyDrive/Colab Datasets/human_resources'
+original_path = os.getcwd()
+os.chdir(os.path.dirname(__file__))
+os.chdir('../')
+DATA_FOLDER = os.path.join(os.getcwd(), 'data')
+# DATA_FOLDER     = '/content/drive/MyDrive/Colab Datasets/human_resources'
 CSV_FILE_NAME   = 'employees.csv'
+CSV_FILE_PATH = os.path.join(DATA_FOLDER, CSV_FILE_NAME)
 ANON_CSV_FILE_NAME = 'employees_anon.csv'
+ANON_CSV_FILE_PATH = os.path.join(DATA_FOLDER, ANON_CSV_FILE_NAME)
 PSEUDO_NAME_API = 'https://api.namefake.com/'
 
 # Google drive mount
-drive.mount('/content/drive')
+# drive.mount('/content/drive')
 
 class IdGenerator: 
 
