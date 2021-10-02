@@ -1,17 +1,12 @@
 # imports
-import math
-
 from bs4 import BeautifulSoup
 import csv
-from matplotlib import colors
-from matplotlib import pyplot as plt, colors
+import math
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import legend
-from matplotlib.ticker import PercentFormatter
 import numpy as np
 import os
-import pandas as pd
 import requests
+from sklearn.metrics import r2_score
 import statistics as stats
 import sys
 import wordninja
@@ -121,8 +116,7 @@ if __name__ == "__main__":
                     census_states.append(census_subcategories[-1])
                     census_data_BASE_YEAR.append(census_state_data[-1])
                 census_data.append(census_state_data)
-    for data in census_data:
-        continue
+
     print()
 
     crimes_total_array = np.array(crime_state_total)
@@ -181,12 +175,12 @@ if __name__ == "__main__":
     print()
 
     crime_data_transpose = list(map(list, zip(*crime_data)))
-    for weapon_rows in crime_data_transpose:
-        weapon_rows_length = len(weapon_rows)
-        outliers = weapon_rows_length // 10
-        for iterations in range(outliers):
-            weapon_rows.remove(min(weapon_rows))
-            weapon_rows.remove(max(weapon_rows))
+    # for weapon_rows in crime_data_transpose:
+    #     weapon_rows_length = len(weapon_rows)
+    #     outliers = weapon_rows_length // 10
+    #     for iterations in range(outliers):
+    #         weapon_rows.remove(min(weapon_rows))
+    #         weapon_rows.remove(max(weapon_rows))
 
     BOX_PLOTS_TO_SHOW = 3
     while len(crime_data_transpose) != BOX_PLOTS_TO_SHOW:
@@ -223,18 +217,15 @@ if __name__ == "__main__":
 
     census_totals_norm = [float(i) / sum(census_data_BASE_YEAR) for i in census_data_BASE_YEAR]
     crime_totals_norm = [float(i) / sum(crime_state_total) for i in crime_state_total]
-    total_crime_and_census = [[], []]
-    for each_index in range(len(crime_row_headers)):
-        total_crime_and_census[0].append(census_totals_norm[each_index])
-        total_crime_and_census[1].append(crime_totals_norm[each_index])
+    total_crime_and_census = [crime_totals_norm, census_totals_norm]
 
-    SCATTER_NUM_OF_X_TICKS = 6
-    scatter_x_ticks = [x for x in range(0, int(max(total_crime_and_census[0]) * 100),
-                                        int(max(total_crime_and_census[0]) * 100) / 6)]
-    for y in len(scatter_x_ticks):
-        scatter_x_ticks[y] = scatter_x_ticks[y] / 100
+    SCATTER_NUM_OF_X_TICKS = 10
+    max_x_value_x_100 = int(max(total_crime_and_census[0]) * 1000)
+    scatter_x_ticks = [x for x in range(0, max_x_value_x_100, int(max_x_value_x_100 / SCATTER_NUM_OF_X_TICKS))]
+    for y in range(len(scatter_x_ticks)):
+        scatter_x_ticks[y] = float(scatter_x_ticks[y]) / 1000.0
 
-    PERCENT_DATA_POINTS_SCRUBBED = 3
+    PERCENT_DATA_POINTS_SCRUBBED = 2
     num_scrub_points = math.ceil(len(crime_row_headers) * (PERCENT_DATA_POINTS_SCRUBBED / 100))
 
     for k in range(num_scrub_points):
@@ -260,5 +251,7 @@ if __name__ == "__main__":
     plt.xlabel('Normalized State Populations')
     plt.ylabel('Normalized State Murders')
     plt.title('State Population & Murder Data (Per FBI & Census - ' + str(BASE_YEAR) + ')')
+    print('Coefficient of determination: %.2f'
+          % r2_score(total_crime_and_census[0], total_crime_and_census[1]))
     plt.show()
     print()
