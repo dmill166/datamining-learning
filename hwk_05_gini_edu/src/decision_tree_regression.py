@@ -39,6 +39,17 @@ if __name__ == "__main__":
     print('*** Correlation Matrix ***')
     print(corr)
 
-# TODO: attempt a linear regression model, displaying the obtained r2 score
+# TODO: attempt a decision tree regression model, displaying the obtained r2 score
+    X = df['gini'].values.reshape((-1, 1))
+    Y = df['edu_index'].values.reshape((-1, 1))
+    model = DecisionTreeRegressor().fit(X, Y)
+    score = model.score(X, Y)
+    print('r2 score: {:.2f}'.format(score))
 
 # TODO: produce a visualization of the data points and the fitted points
+    Y_pred = model.predict(X)
+    plt.scatter(X, Y)
+    plt.plot(X, Y_pred, '-r')
+    plt.xlabel('gini')
+    plt.ylabel('edu_index')
+    plt.show()
