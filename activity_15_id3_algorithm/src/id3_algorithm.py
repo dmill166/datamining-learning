@@ -10,9 +10,12 @@ from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn import tree
 
 # definitions/parameters
-# DATA_FOLDER     = '/content/drive/MyDrive/Colab Datasets/human_resources'
-DATA_FOLDER = '../data'
+original_path = os.getcwd()
+os.chdir(os.path.dirname(__file__))
+os.chdir('../')
+DATA_FOLDER = os.path.join(os.getcwd(), 'data')
 CSV_FILE_NAME   = 'realestate.csv'
+CSV_FILE_PATH = os.path.join(DATA_FOLDER, CSV_FILE_NAME)
 
 class DTree: 
 
@@ -51,7 +54,7 @@ def entropy(df):
     entropy = [ (-1) * (count / total) * math.log(count / total) for count in target_counts ]
     return sum(entropy)
 
-# computes a dedision tree given a data frame
+# computes a decision tree given a data frame
 # assumes that the last column is the target
 def id3(df):
 
@@ -128,10 +131,15 @@ def id3(df):
 if __name__ == "__main__":
 
     # TODO: call id3 on a data frame (obtained from a CSV file)
+    df = pd.read_csv(CSV_FILE_PATH)
+    my_decision_tree = id3(df)
 
     # TODO; print the obtained decision tree
+    print(my_decision_tree)
 
-    # TODO: compute the accuracy of the decision tree 
+    # TODO: compute the accuracy of the decision tree
+    
+
  
     # TODO: do the same but now using sklearn's DecisionTreeClassifier
 
