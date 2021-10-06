@@ -49,7 +49,7 @@ if __name__ == "__main__":
 # TODO: produce a visualization of the data points and the fitted points
     Y_pred = model.predict(X)
     plt.scatter(X, Y)
-    plt.plot(X, Y_pred, '-r')
+    plt.scatter(X, Y_pred, c='red')
     plt.xlabel('gini')
     plt.ylabel('edu_index')
     plt.show()
