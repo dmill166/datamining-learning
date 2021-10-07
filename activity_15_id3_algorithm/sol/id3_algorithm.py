@@ -8,6 +8,7 @@ from pandas.core.frame import DataFrame
 from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn import tree
+import matplotlib.pyplot as plt
 
 # definitions/parameters
 # DATA_FOLDER     = '/content/drive/MyDrive/Colab Datasets/human_resources'
@@ -129,20 +130,28 @@ if __name__ == "__main__":
 
     # TODOd: call id3 on a data frame (obtained from a CSV file)
     df = pd.read_csv(os.path.join(DATA_FOLDER, CSV_FILE_NAME))
-    tree = id3(df)
+    my_tree = id3(df)
 
     # TODOd: print the obtained decision tree
-    print(tree)
+    print(my_tree)
 
-    # TODO: compute the accuracy of the decision tree 
+    # TODOd: compute the accuracy of the decision tree 
     correct = 0
     for _, row in df.iterrows():
-        value_predict = tree.predict(row, 'bedrooms')
+        value_predict = my_tree.predict(row, 'bedrooms')
         if value_predict == row['bedrooms']:
             correct += 1
     print('accuracy:', correct/len(df.index))
  
-    # TODO: do the same but now using sklearn's DecisionTreeClassifier
-
-
+    # TODOd: do the same but now using sklearn's DecisionTreeClassifier
+    X = df.iloc[:,0:-1].values
+    Y = df.iloc[:,-1].values
+    model = DecisionTreeClassifier().fit(X, Y)
+    print(export_text(model, feature_names=list(df.columns[:-1])))
+    correct = 0
+    for _, row in df.iterrows():
+        value_predict = model.predict([row[:-1].values])
+        if value_predict == row['bedrooms']:
+            correct += 1
+    print('accuracy:', correct/len(df.index))
 
