@@ -138,10 +138,27 @@ if __name__ == "__main__":
     print(my_decision_tree)
 
     # TODO: compute the accuracy of the decision tree
-    
+    # correct = 0
+    # for _, row in df.iterrows():
+    #     value_predict = my_decision_tree.predict(row, 'bedrooms')
+    #     if value_predict == row['bedrooms']:
+    #         correct += 1
+    # print('accuracy"', correct / len(df.index))
 
  
     # TODO: do the same but now using sklearn's DecisionTreeClassifier
+    X = df.iloc[:, 0:-1].values
+    # print(X)
+    Y = df.iloc[:, -1].values
+    # print(Y)
+    model = DecisionTreeClassifier().fit(X, Y)
+    print(export_text(model, feature_names=list(df.columns[:-1])))
 
+    correct = 0
+    for _, row in df.iterrows():
+        value_predict = model.predict(row[:-1].values)
+        if value_predict == row['bedrooms']:
+            correct += 1
+    print('accuracy"', correct / len(df.index))
 
 
