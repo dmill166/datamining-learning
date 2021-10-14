@@ -155,24 +155,23 @@ if __name__ == "__main__":
 
         # TODO: split the dataset into training and test dataset
         # make sure you select data rows randomly and without repetition
-        random.seed(0)
+        random.seed(8675309)
         rows_train = random.sample(range(len(df)), k=int(len(df) * .2))
-        # print(rows_train)
-        df_train = pd.DataFrame(columns=df.columns)
-        df_test = pd.DataFrame(columns=df.columns)
+        training_data = pd.DataFrame(columns=df.columns)
+        test_data = pd.DataFrame(columns=df.columns)
         for i, row in df.iterrows():
             if i in rows_train:
-                df_train = df_train.append(row)
+                training_data = training_data.append(row)
             else:
-                df_test = df_test.append(row)
+                test_data = test_data.append(row)
 
         # TODO: train a decision tree model (you can use the id3 function or scikit learn)
         print('training...')
-        df_train = pd.read_csv(CSV_FILE_PATH)
+        training_data = pd.read_csv(CSV_FILE_PATH)
 
         # my_tree = id3(df_train)
-        X = df_train.iloc[:, 0:-1].values
-        Y = df_train.iloc[:, -1].values
+        X = training_data.iloc[:, 0:-1].values
+        Y = training_data.iloc[:, -1].values
         model = DecisionTreeClassifier().fit(X, Y)
         print('done!')
 
@@ -180,18 +179,18 @@ if __name__ == "__main__":
         # print(my_tree)
         print(model)
 
-        text_representation = tree.export_text(model, feature_names=list(df_train.columns)[0:-1])
+        text_representation = tree.export_text(model, feature_names=list(training_data.columns)[:-1])
         print(text_representation)
 
         # TODO: compute the accuracy of the obtained model using the test dataset
         correct = 0
-        df_test = pd.read_csv(CSV_FILE_PATH)
-        for _, row in df_test.iterrows():
+        test_data = pd.read_csv(CSV_FILE_PATH)
+        for _, row in test_data.iterrows():
             # value_predict = my_tree.predict(row, 'target')
             value_predict = model.predict(row, 'target')
             if value_predict == row['target']:
                 correct += 1
-        print('accuracy:', correct / len(df_test.index))
+        print('accuracy:', correct / len(test_data.index))
 
     # TODO: plot learning curve
 
