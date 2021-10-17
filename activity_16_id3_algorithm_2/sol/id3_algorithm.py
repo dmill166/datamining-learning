@@ -153,20 +153,20 @@ if __name__ == "__main__":
     # print(len(df_test))
 
     # TODO: call id3 on the training dataset
-    df_train = pd.read_csv(CSV_FILE_PATH)
-    my_tree = id3(df_train)
+    # df_train = pd.read_csv(CSV_FILE_PATH)
+    # my_tree = id3(df_train)
 
     # TODO; print the obtained decision tree
-    print(my_tree)
+    # print(my_tree)
 
     # TODO: compute the accuracy of the decision tree using the test dataset
-    correct = 0
-    df_test = pd.read_csv(CSV_FILE_PATH)
-    for _, row in df_test.iterrows():
-        value_predict = my_tree.predict(row, 'target')
-        if value_predict == row['target']:
-            correct += 1
-    print('accuracy:', correct / len(df_test.index))
+    # correct = 0
+    # df_test = pd.read_csv(CSV_FILE_PATH)
+    # for _, row in df_test.iterrows():
+    #     value_predict = my_tree.predict(row, 'target')
+    #     if value_predict == row['target']:
+    #         correct += 1
+    # print('accuracy:', correct / len(df_test.index))
 
     # TODO: do the same but now using sklearn's DecisionTreeClassifier
     X = df_train.iloc[:, 0:-1].values
@@ -174,9 +174,9 @@ if __name__ == "__main__":
     model = DecisionTreeClassifier().fit(X, Y)
     print(export_text(model, feature_names=list(df_train.columns[:-1])))
 
-    correct = 0
-    for _, row in df_test.iterrows():
-        value_predict = model.predict([row[:-1].values])
-        if value_predict == row['target']:
-            correct += 1
-    print('accuracy:', correct / len(df_test.index))
+    # correct = 0
+    # for _, row in df_test.iterrows():
+    #     value_predict = model.predict([row[:-1].values])
+    #     if value_predict == row['target']:
+    #         correct += 1
+    # print('accuracy:', correct / len(df_test.index))
