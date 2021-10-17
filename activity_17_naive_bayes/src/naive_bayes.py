@@ -37,7 +37,7 @@ if __name__ == "__main__":
     correct = 0
     for _, row in df.iterrows():
         probs = [0] * len(classes)
-        print(probs)
+        # print(probs)
         for _class in classes:
             # probablity of the class
             total_class = len(df[df[target_class] == _class])
@@ -47,8 +47,3 @@ if __name__ == "__main__":
         print(probs)
 
     # TODO: repeat but now use the scikit learn classifier
-    
-
-
-
-
