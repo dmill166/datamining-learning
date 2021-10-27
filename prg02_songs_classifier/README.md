@@ -6,7 +6,7 @@ The goal of this analysis is to develop classification models capable of predict
 
 ## Dataset 
 
-Download the dataset for this project from[Kaggle](https://www.kaggle.com/mrmorj/dataset-of-songs-in-spotify), a collection of 42,305 song track from various musical genres, with the following audio attributes:
+The dataset for this project is available under 'data' (genres_v2.csv) and it was obtained from [Kaggle](https://www.kaggle.com/mrmorj/dataset-of-songs-in-spotify). It consists of a collection of 42,305 song track from various musical genres, with the following audio attributes:
 
 * danceability
 * energy 
