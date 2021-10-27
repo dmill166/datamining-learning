@@ -29,9 +29,14 @@ The data analysis must be presented as a Jupyter notebook with the following (re
 * Preamble: this is a markdown section containing the title of your project, author(s), contact info (email), and the date when the notebook was last updated. 
 * Introduction: a short paragraph written in markdown explaining what is your project about.
 * Dataset: also in markdown, this section should describe in detail the dataset that you will be using in this project, explaining any specific terms related to your data collection that most people wouldn't be familiar with; if some field can be classified into categories, explain those in detail and the range of possible values for each category
-* Preprocessing: this section should contain one or more markdown text with supporting code explaining how the dataset was processed before the analysis, including attributes removal, attributes enconding, and normalization transformations. 
+* Preprocessing: this section should contain one or more markdown text with supporting code explaining how the dataset was processed before the analysis, including attributes removal, attributes enconding, and any transformations perfomed in the original dataset. 
 * Summary Statistics: this section should present the python code that displays summary statistics and visuals from each of the attributes of the dataset; at minimum, a histogram and a multi box plot (per genre) should be produce per attribute. 
-* Correlation Analysis: you should do at least one correlation analysis, like comparing speechiness and instrumentalness, * * Classification: you should show the code and results of 3 classification models based on decision tree inference, naive Bayes classification, and artificial neural networks; each classification model should be based on a consistent split between training and testing datasets; the accuracy of each model should be displayed; any specific tunning paramenter used in a model should be supported by an explanatory text. 
+* Correlation Analysis: do at least one correlation analysis, like comparing speechiness and instrumentalness, for example.  
+* Classification: show the code and results of 3 classification models based on decision tree inference, naive Bayes classification, and artificial neural networks; each classification model should be based on a consistent split between training and testing datasets; the accuracy of each model should be displayed; any specific tunning parameter used in a model should be supported by an explanatory text. 
+
+Regarding the meaning of a multi box plot (per genre), see the example below. 
+
+![boxplot](files/boxplot.png)
 
 ## Submission
 
