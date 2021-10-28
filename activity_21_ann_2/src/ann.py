@@ -1,6 +1,6 @@
 # CS390Z - Introduction to Data Minining - Fall 2021
 # Instructor: Thyago Mota
-# Description: Activity 20: ANN for the real estate dataset 
+# Description: Activity 21: ANN for hearts and diabetes datasets
 
 from sklearn.neural_network import MLPClassifier 
 import numpy as np
