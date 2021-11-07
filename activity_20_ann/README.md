@@ -1,9 +1,9 @@
-# Activity 17
+# Activity 20
 
-## Naive Bayes Classification
+## ANN Classification
 
 ## Goal
-The goal of this activity is to introduce the naive Bayes classification. 
+The goal of this activity is to introduce the ANN classification. 
 
 ## Instructions
 
@@ -11,7 +11,7 @@ Create a Jupyter notebook with the following sections:
 
 ### Preamble
 
-Title: *Naive Bayes Classification*
+Title: *ANN Classification*
 
 Author: *\<your name\>*
 
