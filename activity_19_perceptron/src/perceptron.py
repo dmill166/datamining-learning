@@ -13,7 +13,7 @@ if __name__ == "__main__":
         [1, 1, -1, -1],
         [1, 1, 1, 1]
     ]
-    array = np.array(and_dataset)
+    #array = np.array(and_dataset)
 
     or_dataset = [ 
         [1, -1, -1, -1], 
@@ -21,7 +21,21 @@ if __name__ == "__main__":
         [1, 1, -1, 1],
         [1, 1, 1, 1]
     ]
-    # array = np.array(or_dataset)
+    array = np.array(or_dataset)
+
+    xor_dataset = [
+        [1, -1, -1, -1],
+        [1, -1, 1, 1],
+        [1, 1, -1, 1],
+        [1, 1, 1, -1]
+    ]
+    #array = np.array(or_dataset)
 
     # TODO: train a perceptron to implement AND/OR classifiers
+    X = array[:, :-1]
+    Y = array[:,-1]
+    clf = Perceptron(random_state=0).fit(X, Y)
+    print('Weights:', clf.coef_)
+    print('Accuracy:', clf.score(X, Y))
+
     

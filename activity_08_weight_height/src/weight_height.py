@@ -38,7 +38,6 @@ if __name__ == "__main__":
                 m_height_list.append(float(line_text[1]))
                 m_weight_list.append(float(line_text[2]))
 
-        
     # TODO: compute and display stats summary info for female and male: heigh (range, mean and std), weight (range, mean and std), and correlation coefficient between height and weight
     lists = [f_height_list, f_weight_list, m_height_list, m_weight_list]
     desc_lists = ['Female heights: ', 'Female weights: ', 'Male heights: ', 'Male weights: ']
@@ -54,8 +53,8 @@ if __name__ == "__main__":
         print('mean:', round(np.average(np_arrays[b]), 2))
         print('std:', round(np.std(np_arrays[b]), 2), '\n')
         if b % 2 == 1:
-            print('Corr coeff:', round(np.corrcoef(np_arrays[b-1], np_arrays[b])[0,1], 4), '\n')
-    
+            print('Corr coeff:', round(np.corrcoef(np_arrays[b - 1], np_arrays[b])[0, 1], 4), '\n')
+
     # f_height_data = np.array(f_height_list)
     # print('\n\nFemale height:')
     # print('range: ', np.min(f_height_data), '..', np.max(f_height_data), sep='')
@@ -79,3 +78,19 @@ if __name__ == "__main__":
     # print('range: ', np.min(m_weight_data), '..', np.max(m_weight_data), sep='')
     # print('mean:', np.average(m_weight_data))
     # print('std:', np.std(m_weight_data), '\n')
+
+
+def midterm():
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    ppl_grades = [8.5, 9.1, 9.5, 8, 7.9, 2.3, 8.8, 9, 10, 1, 9.5, 8.2, 8, 9.8, 8, 7.5, 10, 9.9, 7.8, 9.2]
+
+    # TODO: summary statistics
+    print('*** Summary Statistics ***')
+
+    # TODO: boxplot
+    plt.show()
+
+
+midterm()
