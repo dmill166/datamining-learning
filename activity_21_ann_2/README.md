@@ -1,9 +1,9 @@
-# Activity 17
+# Activity 21
 
-## Naive Bayes Classification
+## ANN Classification
 
 ## Goal
-The goal of this activity is to introduce the naive Bayes classification. 
+Different than the previous activity, you will split the dataset into 2: training set and test set. For simplicity, assume that the training set is always 10% of the whole dataset. 
 
 ## Instructions
 
@@ -21,9 +21,10 @@ Last Update: *\<date\>*
 
 ### Dataset
 
-There is only 1 dataset in this activity: 
+There are 2 datasets in this activity: 
 
-* real estate (to predict number of bedrooms of purchased house)
+* heart (to predict probability of having heart disease)
+* diabetes (to predict probability of having diabetes)
 
 ### Instructions
 
