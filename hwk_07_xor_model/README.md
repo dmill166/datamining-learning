@@ -5,7 +5,7 @@
 ## Goal
 Implement a XOR ANN using the following architecture. 
 
-![xor](files/xor.png)
+![xor](files/xorv2.png)
 
 ## Instructions
 
