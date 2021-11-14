@@ -16,5 +16,12 @@ if __name__ == "__main__":
     ]
 
     # TODO: classify the sentences based on their language
+    langs = [0 for _ in range(len(text))]
+    i = 0
+    for sentence in text:
+        langs[i] = detect(sentence)
+        i += 1
+    print (langs)
+
 
 
