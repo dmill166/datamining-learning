@@ -6,7 +6,7 @@ The goal of this analysis is to apply NLP techniques to better understand the mo
 
 ## Dataset 
 
-The dataset for this report can be found at [https://www.kaggle.com/therohk/million-headlines](https://www.kaggle.com/therohk/million-headlines). It consists of a CSV of 1,226,258 lines organized in only two columns: publish_date and headline_text. 
+The dataset for this activity can be found at [https://www.kaggle.com/therohk/million-headlines](https://www.kaggle.com/therohk/million-headlines). It consists of a CSV of 1,226,258 lines organized in only two columns: publish_date and headline_text. 
 
 ## Instructions
 
