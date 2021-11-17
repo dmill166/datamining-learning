@@ -16,14 +16,20 @@ if __name__ == "__main__":
     array = np.array(xor_dataset)
 
     # TODO: train a MLP Classifier to implement a XOR classifier with only 1 hidden layer with 2 nodes
-    X = array[0:,:-1]
-    Y = array[0:,-1]
+    X = array[0:, :-1]
+    Y = array[0:, -1]
+
+    clf = MLPClassifier(hidden_layer_sizes=1, max_iter=3000, random_state=0).fit(X, Y)
 
     # TODO: get the weights (coefs_ attribute)
+    weights = clf.coefs_
 
     # TODO: get the biases (intercepts_ attribute)
+    biases = clf.intercepts_
 
     # TODO: print the score
+    clf.score(X, Y)
+
 
     # check the output
     w_01 = weights[0][0][0] 
@@ -78,3 +84,4 @@ if __name__ == "__main__":
     h_2 = max(x_0*w_02 + x_1*w_12 + x_2*w_22 + b_2, 0)
     out = h_1*w_1out + h_2*w_2out + b_3
     print("x_1:", x_1, ", x_2:", x_2, ", out:", out)  
+
