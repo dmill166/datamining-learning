@@ -1,13 +1,11 @@
 # CS390Z - Introduction to Data Minining - Fall 2021
 # Instructor: Thyago Mota
 # Description: Homework 08: State of the Union
+# Resources
+#   https://linuxhint.com/extract_sentences_nltk_python_module/
 
-import string, operator
-import nltk, csv, os
-from nltk.corpus import stopwords
-from nltk.tokenize import sent_tokenize
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
+import nltk
+import os
 
 # definitions/parameters
 DATA_FOLDER = '../data'
@@ -24,9 +22,9 @@ if __name__ == "__main__":
     with open(os.path.join(DATA_FOLDER, FILE_NAME), 'rt') as file:
         for line in file:
             state_union += line + "\n"
-    
-    # TODO: extract the sentences from state_union
 
+    # TODO: extract the sentences from state_union
+    tokens = nltk.sent_tokenize(state_union)
 
     # TODO: extract a bag of bigrams from the previous sentences
 
