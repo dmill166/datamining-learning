@@ -18,8 +18,7 @@ if __name__ == "__main__":
     # TODO: train a MLP Classifier to implement a XOR classifier with only 1 hidden layer with 2 nodes
     X = array[0:, :-1]
     Y = array[0:, -1]
-
-    clf = MLPClassifier(hidden_layer_sizes=1, max_iter=3000, random_state=0).fit(X, Y)
+    clf = MLPClassifier(hidden_layer_sizes=2, max_iter=3000, random_state=0).fit(X, Y)
 
     # TODO: get the weights (coefs_ attribute)
     weights = clf.coefs_
