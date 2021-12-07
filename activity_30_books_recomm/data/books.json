@@ -1,0 +1,112 @@
+[
+    {
+        "title": "Never Let Me Go",
+        "author": "Kazuo Ishiguro",
+        "genres": [
+            "fiction", 
+            "science-fiction",
+            "dystopian",
+            "contemporary",
+            "literary-fiction"
+        ]
+    },
+    {
+        "title": "American Gods",
+        "author": "Neil Gaiman",
+        "genres": [
+            "fantasy",
+            "fiction",
+            "urban-fantasy",
+            "mythology",
+            "science-fiction"
+        ]
+    },
+    {
+        "title": "Clap When You Land",
+        "author": "Elizabeth Acevedo",
+        "genres": [
+            "young-adult",
+            "contemporary", 
+            "poetry",
+            "fiction",
+            "lgbtq"
+        ]
+    },
+    {
+        "title": "A Time to Kill",
+        "author": "John Grisham",
+        "genres": [
+            "fiction", 
+            "mystery", 
+            "thriller",
+            "crime", 
+            "suspense"
+        ]
+    },
+    {
+        "title": "Throne of Glass",
+        "author": "Sarah J. Maas",
+        "genres": [
+            "fantasy", 
+            "young-adult", 
+            "romance", 
+            "fiction", 
+            "magic"
+        ]
+    },
+    {
+        "title": "Mexican Gothic",
+        "author": "Silvia Moreno-Garcia",
+        "genres": [
+            "horror",
+            "fiction", 
+            "historical-fiction",
+            "gothic",
+            "mystery"
+        ]
+    },
+    {
+        "title": "The Alchemist",
+        "author": "Paulo Coelho",
+        "genres": [
+            "fiction", 
+            "classics",
+            "fantasy",
+            "philosophy",
+            "novel"
+        ]
+    },
+    {
+        "title": "Divergent",
+        "author": "Veronica Roth",
+        "genres": [
+            "young-adult",
+            "dystopian",
+            "fiction", 
+            "fantasy",
+            "science-fiction"
+        ]
+    }, 
+    {
+        "title": "An American Marriage",
+        "author": "Tayari Jones",
+        "genres": [
+            "fiction", 
+            "contemporary", 
+            "literary-fiction",
+            "contemporary-fiction",
+            "adult"
+        ]
+    },
+    {
+        "title": "Crazy Rich Asians",
+        "author": "Kevin Kwan",
+        "genres": [
+            "fiction", 
+            "romance",
+            "contemporary",
+            "adult",
+            "humor"
+        ]
+    }
+]
