@@ -1,0 +1,15 @@
+# --- Core ETL & API ---
+requests==2.32.3          # Industry standard for HTTP polling
+pandas==2.2.3             # Data manipulation and relational mapping
+
+# --- Database & Storage ---
+duckdb==1.1.3             # High-performance analytical database for local demos
+
+# --- Code Quality & Testing ---
+pytest==8.3.4             # Primary testing framework
+pytest-cov==6.0.0         # Ensuring visibility into test coverage
+black==24.10.0            # Opinionated code formatting (PEP 8)
+flake8==7.1.1             # Linting for style consistency
+
+# --- Security ---
+python-dotenv==1.0.1      # Principle of Least Privilege: keeping creds in .env
