@@ -1,0 +1,12 @@
+sources:
+  - name: "nces_grade3_light"
+    strategy: "rest_api"
+    endpoint: "https://educationdata.urban.org/api/v1/schools/edfacts/assessments-k-12/2018/"
+    pagination:
+      type: "none"
+    request:
+      method: "GET"
+      params:
+        grade_edfacts: "03"
+        outcome_edfacts: "01"
+        page: 1

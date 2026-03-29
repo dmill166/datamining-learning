@@ -1,0 +1,1462 @@
+swagger: "2.0"
+info:
+  description: "BDC Public Data Application Programming Interfaces"
+  version: "1.2.0"
+  title: "BDC Public Data"
+  termsOfService: "https://www.fcc.gov/reports-research/developers/api-terms-service"
+  contact:
+    email: "BroadbandDataInquiries@fcc.gov"
+host: "broadbandmap.fcc.gov"
+basePath: "/api/public"
+tags:
+- name: "public-data-api"
+  description: "BDC Public Data APIs"
+schemes:
+- "https"
+paths:
+  /:
+    get:
+      tags:
+      - "public-data-api"
+      summary: "Get Broadband Fabric Tests Status"
+      description: "Returns current status of the app if it is available or not"
+      operationId: "public_status_api.getStatus"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object"
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [
+                  true
+                ],
+                "result_count": 1,
+                "status_code": 200,
+                "message": null,
+                "status": "successful",
+                "request_date": "2024-04-01T14:51:22.967Z"
+              }
+        "403":
+          description: "Method Not Available"
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "403",
+                "message": "Method Not Available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "404":
+          description: "Path Not Found"
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path Not Found",
+                "status": "fail"
+              }
+        "500":
+          description: "An Internal Error Occurred"
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An Internal Error Occurred",
+                "status": "fail"
+              }
+  /map/listAsOfDates:
+    get:
+      tags:
+        - "public-data-api"
+      summary: "Get List of Available As Of Dates"
+      description: "Provides a listing of as of dates available for each data type"
+      operationId: "public_map_api.getListAsOfDates"
+      produces:
+        - "application/json"
+      parameters:
+      - in: header
+        name: "username"
+        description: "Username from FCC User Reg"
+        required: true
+        type: "string"
+      - in: header
+        name: "hash_value"
+        description: "Hash value token associated with username"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/getListAsOfDates"
+        "401":
+          description: "Invalid authorization"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 401,
+                "message": "Unauthorized",
+                "status": "fail"
+              }
+        "403":
+          description: "Forbidden"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 403,
+                "message": "Forbidden",
+                "status": "fail"
+              }
+        "404":
+          description: "Path not found"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path not found",
+                "status": "fail"
+              }
+        "405":
+          description: "Method not available"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "405",
+                "message": "Method not available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "500":
+          description: "An internal error occurred"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An internal error occurred",
+                "status": "fail"
+              }
+  /map/downloads/listAvailabilityData/{as_of_date}:
+    get:
+      tags:
+        - "public-data-api"
+      summary: "Get List of Availability Data Downloads"
+      description: "Provides a full listing of all coverage files that are available for download for a given as of date"
+      operationId: "public_map_api.getListAvailabilityData"
+      produces:
+        - "application/json"
+      parameters:
+      - in: header
+        name: "username"
+        description: "Username from FCC User Reg"
+        required: true
+        type: "string"
+      - in: header
+        name: "hash_value"
+        description: "Hash value token associated with username"
+        required: true
+        type: "string"
+      - in: path
+        name: "as_of_date"
+        description: "As Of Date of selected data (YYYY-MM-DD)"
+        required: true
+        type: "string"
+      - in: query
+        name: "category"
+        description: "category data"
+        required: false
+        type: string
+        enum:
+          - 'Summary'
+          - 'State'
+          - 'Provider'
+      - in: query
+        name: "subcategory"
+        description: subcategory data.
+        required: false
+        type: string
+        enum:
+          - Summary by Geography Type - Census Place
+          - Summary by Geography Type - Other Geographies
+          - Provider Summary by Geography Type
+          - Provider Summary 
+          - Provider List
+          - Location Coverage
+          - Hexagon Coverage
+          - Raw Coverage
+          - Supporting Data
+      - in: query
+        name: "technology_type"
+        description: "technology_type data"
+        required: false
+        type: string
+        enum:
+          - Fixed Broadband
+          - Mobile Broadband
+          - Mobile Voice
+      - in: query
+        name: "speed_tier"
+        description: "speed tier data"
+        required: false
+        type: string
+        enum:
+          - 35/3
+          - 7/1
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/getListAvailabilityData"
+        "400":
+          description: "Invalid Input Parameters"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+                description: >
+                  error:
+                  * `First Error` - as_of_date is required field
+                enum:
+                - "as_of_date is required field"
+                default: "as_of_date is required field"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "401",
+                "message": "FRN is required",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "401":
+          description: "Invalid authorization"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 401,
+                "message": "Unauthorized",
+                "status": "fail"
+              }
+        "403":
+          description: "Forbidden"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 403,
+                "message": "Forbidden",
+                "status": "fail"
+              }
+        "404":
+          description: "Path not found"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path not found",
+                "status": "fail"
+              }
+        "405":
+          description: "Method not available"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "405",
+                "message": "Method not available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "500":
+          description: "An internal error occurred"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An internal error occurred",
+                "status": "fail"
+              }
+  /map/downloads/listChallengeData/{as_of_date}:
+    get:
+      tags:
+        - "public-data-api"
+      summary: "Get List of Challenge Data Downloads"
+      description: "Provides a full listing of all challenge files that are available for download for a given as of date"
+      operationId: "public_map_api.getListChallengeData"
+      produces:
+        - "application/json"
+      parameters:
+      - in: header
+        name: "username"
+        description: "Username from FCC User Reg"
+        required: true
+        type: "string"
+      - in: header
+        name: "hash_value"
+        description: "Hash value token associated with username"
+        required: true
+        type: "string"
+      - in: path
+        name: "as_of_date"
+        description: "As Of Date of selected data (YYYY-MM-DD)"
+        required: true
+        type: "string"
+      - in: query
+        name: "category"
+        description: "category data"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/getListChallengeData"
+        "400":
+          description: "Invalid Input Parameters"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+                description: >
+                  error:
+                  * `First Error` - as_of_date is required field
+                enum:
+                - "as_of_date is required field"
+                default: "as_of_date is required field"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "401",
+                "message": "FRN is required",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "401":
+          description: "Invalid authorization"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 401,
+                "message": "Unauthorized",
+                "status": "fail"
+              }
+        "403":
+          description: "Forbidden"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 403,
+                "message": "Forbidden",
+                "status": "fail"
+              }
+        "404":
+          description: "Path not found"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path not found",
+                "status": "fail"
+              }
+        "405":
+          description: "Method not available"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "405",
+                "message": "Method not available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "500":
+          description: "An internal error occurred"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An internal error occurred",
+                "status": "fail"
+              }
+  /map/downloads/downloadFile/{data_type}/{file_id}:
+    get:
+      tags:
+        - "public-data-api"
+      summary: "Get Download File"
+      description: "Allows users to download availability and challenge data based on the ID and type of the file"
+      operationId: "public_map_api.getDownloadFile"
+      produces:
+        - "application/json"
+      parameters:
+      - in: header
+        name: "username"
+        description: "Username from FCC User Reg"
+        required: true
+        type: "string"
+      - in: header
+        name: "hash_value"
+        description: "Hash value token associated with username"
+        required: true
+        type: "string"
+      - in: path
+        name: "data_type"
+        description: "Data Type of selected data"
+        required: true
+        type: "string"
+      - in: path
+        name: "file_id"
+        description: "File Id"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: Download a file
+          schema:
+            type: string
+            format: binary
+        "400":
+          description: "Invalid Input Parameters"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+                description: >
+                  error:
+                  * `First Error` - data_type and file_id are required field
+                enum:
+                - "data_type and file_id are required field"
+                default: "data_type and file_id are required field"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "401",
+                "message": "data_type and file_id are required field",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "401":
+          description: "Invalid authorization"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 401,
+                "message": "Unauthorized",
+                "status": "fail"
+              }
+        "403":
+          description: "Forbidden"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 403,
+                "message": "Forbidden",
+                "status": "fail"
+              }
+        "404":
+          description: "Path not found"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path not found",
+                "status": "fail"
+              }
+        "405":
+          description: "Method not available"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "405",
+                "message": "Method not available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "422":
+          description: "${file_id} -> File Id: the file_id does not exist"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 422,
+                "message": "${file_id} -> File Id: the file_id does not exist",
+                "status": "fail"
+              }
+        "500":
+          description: "An internal error occurred"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An internal error occurred",
+                "status": "fail"
+              }
+  /map/downloads/downloadFile/{data_type}/{file_id}/{file_type}:
+    get:
+      tags:
+        - "public-data-api"
+      summary: "Get Download File"
+      description: "Allows users to download availability and challenge data based on the ID and type of the file"
+      operationId: "public_map_api.getDownloadFile_file_type"
+      produces:
+        - "application/json"
+      parameters:
+      - in: header
+        name: "username"
+        description: "Username from FCC User Reg"
+        required: true
+        type: "string"
+      - in: header
+        name: "hash_value"
+        description: "Hash value token associated with username"
+        required: true
+        type: "string"
+      - in: path
+        name: "data_type"
+        description: "Data Type of selected data"
+        required: true
+        type: "string"
+      - in: path
+        name: "file_id"
+        description: "File Id"
+        required: true
+        type: "string"
+      - in: path
+        name: "file_type"
+        description: "Type of file"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: Download a file
+          schema:
+            type: string
+            format: binary
+        "400":
+          description: "Invalid Input Parameters"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+                description: >
+                  error:
+                  * `First Error` - data_type and file_id are required field
+                enum:
+                - "data_type and file_id are required field"
+                default: "data_type and file_id are required field"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "401",
+                "message": "data_type and file_id are required field",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "401":
+          description: "Invalid authorization"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 401,
+                "message": "Unauthorized",
+                "status": "fail"
+              }
+        "403":
+          description: "Forbidden"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 403,
+                "message": "Forbidden",
+                "status": "fail"
+              }
+        "404":
+          description: "Path not found"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path not found",
+                "status": "fail"
+              }
+        "405":
+          description: "Method not available"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "405",
+                "message": "Method not available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "422":
+          description: "${file_id} -> File Id: the file_id does not exist"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 422,
+                "message": "${file_id} -> File Id: the file_id does not exist",
+                "status": "fail"
+              }
+        "500":
+          description: "An internal error occurred"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An internal error occurred",
+                "status": "fail"
+              }
+  /fundingmap/downloads/listFundingData:
+    get:
+      tags:
+        - "public-data-api"
+      summary: "Get List of Broadband Funding Data"
+      description: "Provides a listing of broadband funding data available for download"
+      operationId: "public_map_api.listFundingData"
+      produces:
+        - "application/json"
+      parameters:
+      - in: header
+        name: "username"
+        description: "Username from FCC User Reg"
+        required: true
+        type: "string"
+      - in: header
+        name: "hash_value"
+        description: "Hash value token associated with username"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/listFundingData"
+        "401":
+          description: "Invalid authorization"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 401,
+                "message": "Unauthorized",
+                "status": "fail"
+              }
+        "403":
+          description: "Forbidden"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 403,
+                "message": "Forbidden",
+                "status": "fail"
+              }
+        "404":
+          description: "Path not found"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path not found",
+                "status": "fail"
+              }
+        "405":
+          description: "Method not available"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "405",
+                "message": "Method not available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "500":
+          description: "An internal error occurred"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An internal error occurred",
+                "status": "fail"
+              }
+  /fundingmap/downloads/downloadFile/{file_id}:
+    get:
+      tags:
+        - "public-data-api"
+      summary: "Get Download File"
+      description: "Allows users to download broadband funding data based on the file ID"
+      operationId: "public_map_api.downloadFundingDataFile"
+      produces:
+        - "application/json"
+      parameters:
+      - in: header
+        name: "username"
+        description: "Username from FCC User Reg"
+        required: true
+        type: "string"
+      - in: header
+        name: "hash_value"
+        description: "Hash value token associated with username"
+        required: true
+        type: "string"
+      - in: path
+        name: "file_id"
+        description: "File Id"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: Download a file
+          schema:
+            type: string
+            format: binary
+        "400":
+          description: "Invalid Input Parameters"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+                description: >
+                  error:
+                  * `First Error` - file_id is required field
+                enum:
+                - "file_id is required field"
+                default: "file_id is required field"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "400",
+                "message": "file_id is required field",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "401":
+          description: "Invalid authorization"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 401,
+                "message": "Unauthorized",
+                "status": "fail"
+              }
+        "403":
+          description: "Forbidden"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 403,
+                "message": "Forbidden",
+                "status": "fail"
+              }
+        "404":
+          description: "Path not found"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 404,
+                "message": "Path not found",
+                "status": "fail"
+              }
+        "405":
+          description: "Method not available"
+          schema:
+            type: "object"
+            properties:
+              data: 
+                type: array
+                items: {
+                  type: "object",
+                  properties: {
+                  }
+                }
+              result_count: 
+                type: number
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+              request_date: 
+                type: string
+          examples:
+            application/json:
+              {
+                "data": [],
+                "result_count": 0,
+                "status_code": "405",
+                "message": "Method not available",
+                "status": "successful",
+                "request_date": "2022-04-08T12:50:38.962Z"
+            }
+        "422":
+          description: "${file_id} -> File Id: the file_id is invalid"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 422,
+                "message": "${file_id} -> File Id: the file_id is invalid",
+                "status": "fail"
+              }
+        "500":
+          description: "An internal error occurred"
+          schema:
+            type: "object"
+            properties:
+              status_code: 
+                type: string
+              message:
+                type: "string"
+              status: 
+                type: string
+          examples:
+            application/json:
+              {
+                "status_code": 500,
+                "message": "An internal error occurred",
+                "status": "fail"
+              }
+definitions:
+  getListAsOfDates:
+    type: "object"
+    properties:
+        data: 
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              data_type:
+                type: "string"
+              as_of_date:
+                type: "string"
+        result_count: 
+          type: number
+        status_code: 
+          type: string
+        message:
+          type: "string"
+        status: 
+          type: string
+        request_date: 
+          type: string
+  getListAvailabilityData:
+    type: "object"
+    properties:
+        data: 
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              file_id:
+                type: "number"
+              category:
+                type: "string"
+              subcategory:
+                type: "string"
+              technology_type:
+                type: "string"
+              technology_code:
+                type: "string"
+              technology_code_desc:
+                type: "string"
+              speed_tier:
+                type: "string"
+              state_fips:
+                type: "string"
+              state_name:
+                type: "string"
+              provider_id:
+                type: "number"
+              provider_name:
+                type: "string"
+              file_type:
+                type: "string"
+              file_name:
+                type: "string"
+              record_count:
+                type: "string"
+        result_count: 
+          type: number
+        status_code: 
+          type: string
+        message:
+          type: "string"
+        status: 
+          type: string
+        request_date: 
+          type: string
+  getListChallengeData:
+    type: "object"
+    properties:
+        data: 
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              file_id:
+                type: "number"
+              category:
+                type: "string"
+              state_fips:
+                type: "string"
+              state_name:
+                type: "string"
+              record_count:
+                type: "string"
+        result_count: 
+          type: number
+        status_code: 
+          type: string
+        message:
+          type: "string"
+        status: 
+          type: string
+        request_date: 
+          type: string
+  listFundingData:
+    type: "object"
+    properties:
+        data: 
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              file_id:
+                type: "number"
+              category:
+                type: "string"
+              data_type:
+                type: "string"
+              agency_name:
+                type: "string"
+              program_name:
+                type: "string"
+              project_name:
+                type: "string"
+              state_fips:
+                type: "string"
+              state_name:
+                type: "string"
+              file_name:
+                type: "string"
+              record_count:
+                type: "number"
+        result_count: 
+          type: number
+        status_code: 
+          type: string
+        message:
+          type: "string"
+        status: 
+          type: string
+        request_date: 
+          type: string
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

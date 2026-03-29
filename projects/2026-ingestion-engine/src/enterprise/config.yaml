@@ -1,0 +1,51 @@
+# v2 Enterprise Ingestion Configuration
+# This file is the "source of truth" for the declarative ingestion engine.
+# Instead of writing custom Python scripts for standard APIs, an engineer
+# simply defines the API contract here to generate the pipeline.
+
+sources:
+  - name: "nces_grade3"
+    description: "NCES Grade 3 Assessments (Urban Institute)"
+    endpoint: "https://educationdata.urban.org/api/v1/school-districts/edfacts/assessments/2020/grade-3/"
+    auth:
+      type: "none"
+    pagination:
+      type: "next_link"
+      results_key: "results"
+      next_url_key: "next"
+    request:
+      method: "GET"
+      headers: {}
+      params: {}
+
+  - name: "census_hps"
+    description: "Census Household Pulse Survey (Internet/AI)"
+    endpoint: "https://api.census.gov/data/timeseries/hps"
+    auth:
+      type: "none"
+    pagination:
+      type: "none"
+    request:
+      method: "GET"
+      headers: {}
+      params:
+        get: "INTRNTAVAIL,COMP,EST_ST,WEEK"
+        for: "state:*"
+        time: "2023"
+
+  # Pedagogical Note for Students:
+  # The FCC BDC API is structurally a 3-step file-download process, not a REST query. 
+  # In enterprise systems like Airbyte/Singer, APIs that deviate this far from standard 
+  # REST paradigms cannot be modeled cleanly in YAML. They require custom Python "Plugins"
+  # or "Taps". We reflect that reality here by delegating it to our custom V1 class.
+  - name: "fcc_broadband"
+    description: "FCC Broadband Data Collection"
+    type: "custom_plugin"
+    plugin_module: "src.student.collect_broadband"
+    plugin_class: "BroadbandCollector"
+
+  - name: "census_income"
+    description: "Median Household Income (ACS 1-Year)"
+    type: "custom_plugin"
+    plugin_module: "src.student.collect_income"
+    plugin_class: "IncomeCollector"

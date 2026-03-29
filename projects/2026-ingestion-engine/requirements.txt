@@ -1,15 +1,22 @@
 # --- Core ETL & API ---
-requests==2.32.3          # Industry standard for HTTP polling
-pandas==2.2.3             # Data manipulation and relational mapping
+requests==2.32.3          # HTTP polling for all three API collectors
+pandas==2.2.3             # Data flattening and Silver layer transformation
 
 # --- Database & Storage ---
-duckdb==1.1.3             # High-performance analytical database for local demos
+duckdb==1.1.3             # Analytical database for Silver and Gold layers
+
+# --- Visualization ---
+matplotlib==3.9.0         # EDA scatter plot output
+seaborn==0.13.2
+pyyaml==6.0.2           # Scatter styling and regression line overlay
+scipy==1.17.1
 
 # --- Code Quality & Testing ---
 pytest==8.3.4             # Primary testing framework
-pytest-cov==6.0.0         # Ensuring visibility into test coverage
+pytest-cov==6.0.0         # Test coverage reporting
+pytest-mock==3.14.0       # Mock library — eliminates live API calls in unit tests
 black==24.10.0            # Opinionated code formatting (PEP 8)
 flake8==7.1.1             # Linting for style consistency
 
 # --- Security ---
-python-dotenv==1.0.1      # Principle of Least Privilege: keeping creds in .env
+python-dotenv==1.0.1      # Principle of Least Privilege: all secrets in .env
